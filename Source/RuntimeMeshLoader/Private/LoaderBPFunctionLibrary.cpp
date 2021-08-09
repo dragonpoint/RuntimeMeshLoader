@@ -5,7 +5,7 @@
 #include <assimp/scene.h>       // Output data structure
 #include <assimp/postprocess.h> // Post processing flags
 
-void FindMeshInfo(const aiScene* scene, aiNode* node, FReturnedData& result)
+void FindMeshInfo(const aiScene* scene, aiNode* node, FLoadedMeshData& result)
 {
 
 	for (uint32 i = 0; i < node->mNumMeshes; i++)
@@ -15,7 +15,7 @@ void FindMeshInfo(const aiScene* scene, aiNode* node, FReturnedData& result)
 		UE_LOG(LogTemp, Warning, TEXT("FindMeshInfo. %s\n"), *Fs);
 		int meshidx = *node->mMeshes;
 		aiMesh *mesh = scene->mMeshes[meshidx];
-		FMeshInfo &mi = result.meshInfo[meshidx];
+		FOneMeshInfo &mi = result.meshInfo[meshidx];
 
 		//transform.
 		aiMatrix4x4 tempTrans = node->mTransformation;
@@ -88,7 +88,7 @@ void FindMeshInfo(const aiScene* scene, aiNode* node, FReturnedData& result)
 }
 
 
-void FindMesh(const aiScene* scene, aiNode* node, FReturnedData& retdata)
+void FindMesh(const aiScene* scene, aiNode* node, FLoadedMeshData& retdata)
 {
 	FindMeshInfo(scene, node, retdata);
 
@@ -100,9 +100,9 @@ void FindMesh(const aiScene* scene, aiNode* node, FReturnedData& retdata)
 
 
 
-FReturnedData ULoaderBPFunctionLibrary::LoadMesh(FString filepath, EPathType type)
+FLoadedMeshData ULoaderBPFunctionLibrary::LoadMesh(FString filepath, EPathType type)
 {
-	FReturnedData result;
+	FLoadedMeshData result;
 	result.bSuccess = false;
 	result.meshInfo.Empty();
 	result.NumMeshes = 0;
@@ -133,7 +133,7 @@ FReturnedData ULoaderBPFunctionLibrary::LoadMesh(FString filepath, EPathType typ
 
 	Assimp::Importer mImporter;
 
-	const aiScene* mScenePtr = mImporter.ReadFile(file, aiProcess_Triangulate | aiProcess_MakeLeftHanded | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_OptimizeMeshes);
+	const aiScene* mScenePtr = mImporter.ReadFile(file, aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_MakeLeftHanded | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals | aiProcess_OptimizeMeshes);
 
 	if (mScenePtr == nullptr)
 	{

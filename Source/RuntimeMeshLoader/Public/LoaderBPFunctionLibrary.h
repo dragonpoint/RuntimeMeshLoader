@@ -14,7 +14,7 @@ enum class EPathType : uint8
 
 
 USTRUCT(BlueprintType)
-struct FMeshInfo
+struct FOneMeshInfo
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -41,7 +41,7 @@ struct FMeshInfo
 };
 
 USTRUCT(BlueprintType)
-struct FReturnedData
+struct FLoadedMeshData
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -53,7 +53,7 @@ struct FReturnedData
 
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ReturnedData")
-		TArray<FMeshInfo> meshInfo;
+		TArray<FOneMeshInfo> meshInfo;
 
 
 };
@@ -72,7 +72,7 @@ class RUNTIMEMESHLOADER_API ULoaderBPFunctionLibrary : public UBlueprintFunction
 public:
 
 	UFUNCTION(BlueprintCallable,Category="MeshLoader")
-	static FReturnedData LoadMesh(FString filepath,EPathType type= EPathType:: Absolute);
+	static FLoadedMeshData LoadMesh(FString filepath,EPathType type= EPathType:: Absolute);
 
 	
 };
